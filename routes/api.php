@@ -14,6 +14,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
+
+Route::prefix('v1')->group(function () {
+    Route::prefix('sort')->group(function () {
+        Route::get('/merge', [\App\Http\Controllers\Sort\MergeSortController::class, 'index']);
+    });
 });
+
