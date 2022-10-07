@@ -2,11 +2,11 @@
 
 namespace App\Adapter\Geral;
 
+use Core\Geral\Interface\LoggerInterface;
 use Illuminate\Support\Facades\Log;
 
-class LoggerAdapter implements \Core\Geral\Interface\LoggerInterface
+class LoggerAdapter implements LoggerInterface
 {
-
     public function alert(string $message, array $context = []): void
     {
         Log::debug($message, $context);

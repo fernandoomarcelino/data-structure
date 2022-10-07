@@ -10,15 +10,15 @@ use PHPUnit\Framework\TestCase;
 class TestUseCase extends TestCase
 {
 
-
-    public function testExplodeElements()
+    public function testUseCase()
     {
-        $mockLogger = $this->createMock(LoggerInterface::class)
-            ->expects($this->atLeast(1))
-            ->method('info');
-        $useCase = new UseCase($mockLogger);
-        $response = $useCase->execute(new InputDto([1,2,3]));
+        $mockLogger = $this->createMock(LoggerInterface::class);
 
-        $this->assertEquals([1,2,3], $response->getElement());
+        $elements = [1, 5, 6, 1, 2, 5];
+        $useCase = new UseCase($mockLogger);
+        $response = $useCase->execute(new InputDto($elements));
+
+        sort($elements);
+        $this->assertEquals(json_encode($elements), json_encode($response->getSortedList()));
     }
 }
