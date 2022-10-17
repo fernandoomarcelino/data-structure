@@ -29,7 +29,6 @@ services:
     networks:
       - network-data-structure-php
 
-
 networks:
   network-data-structure-php:
     driver: bridge

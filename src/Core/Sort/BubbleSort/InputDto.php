@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Sort\Merge;
+namespace Core\Sort\BubbleSort;
 
 class InputDto
 {

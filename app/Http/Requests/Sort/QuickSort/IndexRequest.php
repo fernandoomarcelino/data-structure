@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Sort\Merge;
+namespace App\Http\Requests\Sort\QuickSort;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -24,7 +24,7 @@ class IndexRequest extends FormRequest
     public function rules()
     {
         return [
-//            'list' => 'required'
+            //
         ];
     }
 }

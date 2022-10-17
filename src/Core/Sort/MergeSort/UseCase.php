@@ -1,14 +1,16 @@
 <?php
 
-namespace Core\Sort\Merge;
+namespace Core\Sort\MergeSort;
 
+use Core\Geral\Entity\LogOperation;
 use Core\Geral\Interface\LoggerInterface;
 
 class UseCase
 {
 
     public function __construct(
-        public LoggerInterface $logger
+        public LoggerInterface $logger,
+        public bool            $verbose = false
     )
     {
     }
@@ -18,15 +20,22 @@ class UseCase
         $this->logger->info('started UseCase');
         $start = microtime(true);
 
-        $newList = $this->mergeSort($inputDto->getElement(), 0, $inputDto->amount() -1);
+        $elements = $inputDto->getElement();
+
+        $logOperation = null;
+        if ($this->verbose) {
+            $logOperation = new LogOperation($elements);
+        }
+
+        $newList = $this->mergeSort($inputDto->getElement(), $logOperation);
 
         $this->logger->info('ended UseCase');
         $end = microtime(true);
 
-        return new OutputDto($inputDto->getElement(), $newList, ($end-$start));
+        return new OutputDto($inputDto->getElement(), $newList, ($end - $start), $logOperation);
     }
 
-    private function mergeSort(array $elements): array
+    private function mergeSort(array $elements, LogOperation $logOperation = null): array
     {
         if (count($elements) == 1) {
             return $elements;
@@ -34,8 +43,14 @@ class UseCase
 
         $middle = floor(count($elements) / 2);
 
-        $left = $this->mergeSort(array_slice($elements, 0 ,$middle));
-        $right = $this->mergeSort(array_slice($elements, $middle));
+        $leftElements = array_slice($elements, 0, $middle);
+        $logOperation = $logOperation?->setLeft(new LogOperation($leftElements))->getLeft();
+        $left = $this->mergeSort($leftElements, $logOperation);
+
+        $rightElements = array_slice($elements, $middle);
+        $logOperation = $logOperation?->setRight(new LogOperation($rightElements))->getRight();
+        $right = $this->mergeSort($rightElements, $logOperation);
+
         return $this->implodeElements($left, $right);
     }
 

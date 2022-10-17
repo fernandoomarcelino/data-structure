@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Core\Sort\Merge;
+namespace Tests\Unit\Core\Sort\QuickSort;
 
 use Core\Geral\Interface\LoggerInterface;
 use Core\Sort\Merge\InputDto;
