@@ -21,9 +21,12 @@ class LogOperation
 
     public function setLeft(LogOperation $left): self
     {
-        $left->setPrevious($this);
-        $this->left = $left;
-        $this->addChildren($left);
+        if (!empty($left->elements)) {
+            $left->setPrevious($this);
+            $this->left = $left;
+            $this->addChildren($left);
+        }
+
         return $this;
     }
 
@@ -34,9 +37,12 @@ class LogOperation
 
     public function setRight(LogOperation $right): self
     {
-        $right->setPrevious($this);
-        $this->right = $right;
-        $this->addChildren($right);
+        if (!empty($right->elements)) {
+            $right->setPrevious($this);
+            $this->right = $right;
+            $this->addChildren($right);
+        }
+
         return $this;
     }
 
@@ -63,28 +69,28 @@ class LogOperation
     public function toJson(): array
     {
         $results[] = $this->addRow();
+//
+//        foreach ($this->getChildren() as $children) {
+//            if ($children->getChildren()) {
+//                foreach ($children->getChildren() as $children2) {
+//                    $results = array_merge($results, $children2->toJson());
+//                }
+//            } else {
+//                $results[] = $this->addRow();
+//            }
+//        }
 
-        foreach ($this->getChildren() as $children) {
-            if ($children->getChildren()) {
-                foreach ($children->getChildren() as $children2) {
-                    $results = array_merge($results, $children2->toJson());
-                }
-            } else {
-                $results[] = $this->addRow();
-            }
+        if ($this->getLeft()) {
+            $results = array_merge($results, $this->getLeft()->toJson());
+        } else {
+            $results[] = $this->addRow();
         }
 
-//        if ($this->getLeft()) {
-//            $results = array_merge($results, $this->getLeft()->toJson());
-//        } else {
-//            $results[] = $this->addRow();
-//        }
-//
-//        if ($this->getRight()) {
-//            $results = array_merge($results, $this->getRight()->toJson());
-//        } else {
-//            $results[] = $this->addRow();
-//        }
+        if ($this->getRight()) {
+            $results = array_merge($results, $this->getRight()->toJson());
+        } else {
+            $results[] = $this->addRow();
+        }
         return (array_values($results));
     }
 

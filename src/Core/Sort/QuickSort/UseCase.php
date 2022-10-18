@@ -28,56 +28,47 @@ class UseCase
         if ($this->verbose) {
             $logOperation = new LogOperation($elements);
         }
-        $newList = $this->quickSort($elements, $logOperation);
+        $this->quickSort($elements, 0, count($elements) -1, $logOperation);
 
         $this->logger->info('ended UseCase');
         $end = microtime(true);
 
-        $this->validateSort($elements, $newList);
+        $this->validateSort($inputDto->getElement(), $elements);
 
-        return new OutputDto($elements, $newList, ($end - $start), $logOperation);
+        return new OutputDto($inputDto->getElement(), $elements, ($end - $start), $logOperation);
     }
 
-    private function quickSort(array $elements, LogOperation $logOperation = null): array
+    private function quickSort(array &$elements, $start, $end, LogOperation $logOperation = null): void
     {
-
-        if (count($elements) <= 1) {
-            return $elements;
+        if ($start > $end) {
+            return ;
         }
-        $pivotIndex = $this->run($elements);
 
-        $leftElements = array_slice($elements, 0, $pivotIndex);
-        $logOperation = $logOperation?->setLeft(new LogOperation($leftElements))->getLeft();
-        $left = $this->quickSort($leftElements, $logOperation);
+        $pivotIndex = $this->run($elements, $start, $end);
 
-        $rightElements = array_slice($elements, $pivotIndex);
-        $logOperation = $logOperation?->setRight(new LogOperation($rightElements))->getRight();
-        $right = $this->quickSort($rightElements, $logOperation);
+        $logOperation = $logOperation?->setLeft(new LogOperation(array_slice($elements, $start, $pivotIndex - $start)));
+        $this->quickSort($elements, $start, $pivotIndex - 1, $logOperation?->getLeft());
 
-        return array_merge($left, $right);
+        $logOperation = $logOperation?->setRight(new LogOperation(array_slice($elements, $pivotIndex, $end - $pivotIndex+1)));
+        $this->quickSort($elements, $pivotIndex + 1, $end, $logOperation?->getRight());
     }
 
-    private function run(array &$elements): int
+    private function run(array &$elements, $start, $end): int
     {
-        $lastIndex = count($elements) - 1;
-        $pivot = $elements[$lastIndex];
+        $pivot = $elements[$end];
 
-        $iLeft = 0;
-        foreach ($elements as $iRight => $element) {
-            if ($element <= $pivot) {
-                $elements[$iRight] = $elements[$iLeft];
-                $elements[$iLeft] = $element;
-                $iLeft++;
+        $iLeft = $start;
+        for ($i = $start; $i < $end; $i++) {
+            if ($elements[$i] <= $pivot) {
+                $aux = $elements[$i];
+                $elements[$i] = $elements[$iLeft];
+                $elements[$iLeft] = $aux;
+                $iLeft ++;
             }
         }
 
-        if ($iLeft > $lastIndex) {
-            $iLeft = $lastIndex;
-        }
-
-        $aux = $elements[$lastIndex];
-        $elements[$lastIndex] = $elements[$iLeft];
-        $elements[$iLeft] = $aux;
+        $elements[$end] = $elements[$iLeft];
+        $elements[$iLeft] = $pivot;
 
         return $iLeft;
     }

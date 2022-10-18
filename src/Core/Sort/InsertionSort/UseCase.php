@@ -2,7 +2,6 @@
 
 namespace Core\Sort\InsertionSort;
 
-use Core\Geral\Entity\LogOperation;
 use Core\Geral\Interface\LoggerInterface;
 use Core\Geral\Trait\ValidateSort;
 
@@ -37,14 +36,33 @@ class UseCase
     {
         $length = count($elements);
 
-        for ($i = 1; $i <= $length -1; $i++) {
-            $chave = $elements[$i];
-            $j = $i -1;
-            while ($j >= 0 && $elements[$j] > $chave) {
-                $elements[$j+1] = $elements[$j];
-                $j--;
+        for ($currentKey = 1; $currentKey < $length; $currentKey++) {
+            $previousKey = $currentKey - 1;
+            $element = $elements[$currentKey];
+            while ($previousKey >= 0 && $elements[$previousKey] > $element) {
+                $elements[$previousKey + 1] = $elements[$previousKey];
+                $previousKey--;
             }
-            $elements[$j+1] = $chave;
+            $elements[$previousKey + 1] = $element;
+        }
+
+        return $elements;
+    }
+
+    private function sort2(array $elements): array
+    {
+        $keys = count($elements) - 1;
+
+        for ($key = 1; $key <= $keys; $key++) {
+            $previousKey = $key - 1;
+            $element = $elements[$key];
+
+            while ($previousKey >= 0 && $elements[$previousKey] > $element) {
+                $elements[$previousKey + 1] = $elements[$previousKey];
+                $previousKey --;
+            }
+
+            $elements[$previousKey + 1] = $element;
         }
 
         return $elements;

@@ -11,6 +11,10 @@ services:
       - ./:/var/www
       - xdebug-data:/tmp/xdebug
     environment:
+      DB_HOST: db
+      DB_DATABASE: laravel
+      DB_USERNAME: root
+      DB_PASSWORD: root
       XDEBUG_MODE: coverage
       XDEBUG_CONFIG: remote_connect_back=1 remote_port=9003 remote_enable=1 profiler_enable=0 profiler_enable_trigger=1 profiler_output_dir=/tmp/xdebug mode=debug
       APPLICATION_ENV: development
@@ -19,13 +23,33 @@ services:
     user: "1000:1000"
 
   nginx:
-    image: nginx:latest
+    build: .docker/nginx
     container_name: nginx-data-structure-php
+    restart: always
+    tty: true
     ports:
       - "8888:80"
     volumes:
       - ./:/var/www
-      - ./.docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - network-data-structure-php
+    depends_on:
+      - app-data-structure-php
+
+  db:
+    image: mysql:5.7
+    command: --innodb-use-native-aio=0
+    container_name: db
+    restart: always
+    tty: true
+    ports:
+      - "33006:3306"
+    volumes:
+      - ./.docker/dbdata:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=laravel
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=root
     networks:
       - network-data-structure-php
 

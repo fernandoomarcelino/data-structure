@@ -15,7 +15,7 @@ class GenerateListFactory
 
         $result = [];
         $i = 0;
-        while ($i <= $length) {
+        while ($i < $length) {
             $result[] = rand(0, 999999999);
             $i++;
         }
