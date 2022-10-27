@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Sort;
 use App\Factories\GenerateListFactory;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Sort\QuickSort\IndexRequest;
+use Core\Sort\HeapSort\InputDto as HeapSortInputDto;
+use Core\Sort\HeapSort\UseCase as HeapSortUseCase;
 use Core\Sort\InsertionSort\InputDto as InsertionSortInputDto;
 use Core\Sort\InsertionSort\UseCase as InsertionSortUseCase;
 use Core\Sort\MergeSort\InputDto as MergeSortInputDto;
@@ -31,7 +33,7 @@ class SortController extends Controller
 
         $quickSortResult = (new QuickSortUseCase($this->logger))->execute(new QuickSortInputDto($elements));
         $mergeSortResult = (new MergeSortUseCase($this->logger))->execute(new MergeSortInputDto($elements));
-//        $heapSortResult = (new HeapSortUseCase($this->logger))->execute(new HeapSortInputDto($elements));
+        $heapSortResult = (new HeapSortUseCase($this->logger))->execute(new HeapSortInputDto($elements));
         $insertionSortResult = (new InsertionSortUseCase($this->logger))->execute(new InsertionSortInputDto($elements));
         $selectionSortResult = (new SelectionSortUseCase($this->logger))->execute(new SelectionSortInputDto($elements));
         $bubbleSortResult = (new BubbleSortUseCase($this->logger))->execute(new BubbleSortInputDto($elements));
@@ -39,7 +41,7 @@ class SortController extends Controller
         $data = [
             $quickSortResult->toJson(),
             $mergeSortResult->toJson(),
-//            $heapSortResult->toJson(),
+            $heapSortResult->toJson(),
             $insertionSortResult->toJson(),
             $selectionSortResult->toJson(),
             $bubbleSortResult->toJson(),

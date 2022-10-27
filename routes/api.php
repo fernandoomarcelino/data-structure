@@ -29,5 +29,9 @@ Route::prefix('v1')->group(function () {
 //        Route::get('/', [\App\Http\Controllers\Sort\SortController::class, 'index']);
         Route::get('/binary', [\App\Http\Controllers\Search\BinarySearchController::class, 'index']);
     });
+    Route::prefix('cases')->group(function () {
+        Route::get('/printLeftViewOfBinaryTree', [\App\Http\Controllers\Case\PrintLeftViewOfBinaryTreeController::class, 'index']);
+        Route::get('/binaryTree', [\App\Http\Controllers\Case\BinaryTreeController::class, 'index']);
+    });
 });
 

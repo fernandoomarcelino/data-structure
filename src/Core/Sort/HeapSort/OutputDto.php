@@ -34,7 +34,7 @@ class OutputDto
 //            'originalList' => $this->originalList,
 //            'sortedList' => $this->sortedList,
             'time' => $this->time,
-//            'operationLog' => $this->operationLog->toJson()
+            'operationLog' => $this->operationLog ? $this->operationLog->toJson() : []
         ];
     }
 }

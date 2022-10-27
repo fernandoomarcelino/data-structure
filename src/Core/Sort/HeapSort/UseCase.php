@@ -42,11 +42,7 @@ class UseCase
     {
         $length = count($elements);
 
-        if ($length <= 1) {
-            return $elements;
-        }
-
-        for ($i = $length / 2 - 1; $i >= 0; $i--) {
+        for ($i = floor($length / 2 - 1); $i >= 0; $i--) {
             $logOperation = $logOperation?->setLeft(new LogOperation([$elements[$i]]))->getLeft();
             $this->run($elements, $length, $i, $logOperation);
         }
